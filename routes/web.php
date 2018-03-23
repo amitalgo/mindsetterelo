@@ -17,8 +17,21 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix'=>'admin'],function() {
+    Route::get('/','Admin\LoginController@showLoginForm')->name('admin.login');
+    Route::post('/','Admin\LoginController@login')->name('admin.login.submit');
+
+    Route::group(['middleware'=>'auth:admin'],function(){
+        Route::get('/home', function () {
+            return view('admin.home');
+        })->name('admin-dashboard');
+        Route::group(['middleware'=>'checkPermission'],function(){
+            Route::resource('/tutors','Admin\TutorController');
+        });
+    });
+});
 
 
