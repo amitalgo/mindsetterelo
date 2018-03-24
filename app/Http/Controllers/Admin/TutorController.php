@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\User;
+use App\Services\Tutorservice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TutorController extends Controller
 {
+    protected $userdata;
+    public function __construct(Tutorservice $tutorservice)
+    {
+        $this->userdata=$tutorservice;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +24,9 @@ class TutorController extends Controller
     public function index()
     {
         return view('admin.tutors');
+//        $rt = $this->userdata->getActiveUsers();
+//        $rt =User::find(2)->userRoles;
+//        print_r($rt);
     }
 
     /**
