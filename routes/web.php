@@ -14,7 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/tutor_register','Frontend\TutorRegisterController@index')->name('frontend.tutorRegister');
+Route::post('/tutor_register','Frontend\TutorRegisterController@store')->name('tutor.submit');
 Auth::routes();
 
 

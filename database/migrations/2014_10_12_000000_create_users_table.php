@@ -20,8 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->integer('mobile')->nullable();
             $table->string('password');
-            $table->integer('is_Admin')->nullable();
-            $table->integer('is_Active')->default('1');;
+            $table->integer('is_Admin')->default('0');
+            $table->integer('is_Active')->default('0');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+//        Schema::dropIfExists('users');
     }
 }
