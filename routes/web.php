@@ -16,6 +16,8 @@ Route::get('/', function () {
 });
 Route::get('/tutor_register','Frontend\TutorRegisterController@index')->name('frontend.tutorRegister');
 Route::post('/tutor_register','Frontend\TutorRegisterController@store')->name('tutor.submit');
+Route::get('api/get-state-list','Frontend\StateController@getStateList');
+Route::get('api/get-city-list','Frontend\CityController@getCityList');
 Auth::routes();
 
 

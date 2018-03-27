@@ -1,8 +1,5 @@
-
 <!DOCTYPE html>
 <html>
-
-<!-- Mirrored from coderthemes.com/ubold/light/form-pickers.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Nov 2017 15:23:25 GMT -->
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,7 +51,7 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('fname') ? ' has-error' : '' }}">
-                                        <input id="fname" type="text" class="form-control" placeholder="First Name" name="fname" value="{{ old('fname') }}" required autofocus>
+                                    <input id="fname" type="text" class="form-control" placeholder="First Name" name="fname" value="{{ old('fname') }}" required autofocus>
                                     @if ($errors->has('fname'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('fname') }}</strong>
@@ -64,20 +61,20 @@
 
 
                                 <div class="col-md-6 form-group{{ $errors->has('lname') ? ' has-error' : '' }}">
-                                        <input id="lname" type="text" class="form-control" placeholder="Last Name" name="lname" value="{{ old('lname') }}" required autofocus>
-                                        @if ($errors->has('lname'))
-                                            <span class="help-block">
+                                    <input id="lname" type="text" class="form-control" placeholder="Last Name" name="lname" value="{{ old('lname') }}" required autofocus>
+                                    @if ($errors->has('lname'))
+                                        <span class="help-block">
                                             <strong>{{ $errors->first('lname') }}</strong>
                                         </span>
-                                        @endif
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
                                     <select class="selectpicker" name="gender" data-style="btn-white">
-                                        <option>Male</option>
-                                        <option>Female</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
                                     </select>
                                 </div>
 
@@ -88,6 +85,40 @@
                             </div>
 
                             <div class="col-md-12">
+                                {{--<div class="col-md-6 form-group{{ $errors->has('location') ? ' has-error' : '' }}">--}}
+                                {{--<input id="location" type="text" class="form-control" placeholder="Location" name="location" value="{{ old('location') }}" required autofocus>--}}
+                                {{--@if ($errors->has('location'))--}}
+                                {{--<span class="help-block">--}}
+                                {{--<strong>{{ $errors->first('location') }}</strong>--}}
+                                {{--</span>--}}
+                                {{--@endif--}}
+                                {{--</div>--}}
+                                <div class="col-md-6 form-group{{ $errors->has('country') ? ' has-error' : '' }}">
+                                    <select class="selectpicker" name="country" data-style="btn-white" id="country">
+                                        <option value="">Select Country</option>
+                                        @foreach ($countries as $key => $country)
+                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-6 form-group{{ $errors->has('state') ? ' has-error' : '' }}">
+                                    <select class="selectpicker" name="state" data-style="btn-white" id="state">
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <div class="col-md-6 form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+                                    <select class="selectpicker" name="city" data-style="btn-white" id="city">
+                                        {{--<option value="">Select City</option>--}}
+                                        {{--<option>Mumbai</option>--}}
+                                        {{--<option>Delhi</option>--}}
+                                    </select>
+                                </div>
                                 <div class="col-md-6 form-group{{ $errors->has('address') ? ' has-error' : '' }}">
                                     <input id="address" type="text" class="form-control" placeholder="Address" name="address"  value="{{ old('address') }}" required autofocus>
                                     @if ($errors->has('address'))
@@ -97,31 +128,6 @@
                                     @endif
                                 </div>
 
-
-                                <div class="col-md-6 form-group{{ $errors->has('location') ? ' has-error' : '' }}">
-                                    <input id="location" type="text" class="form-control" placeholder="Location" name="location" value="{{ old('location') }}" required autofocus>
-                                    @if ($errors->has('location'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('location') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="col-md-6 form-group{{ $errors->has('state') ? ' has-error' : '' }}">
-                                    <select class="selectpicker" name="state" data-style="btn-white">
-                                        <option value="maharashtra">Maharashtra</option>
-                                        <option value="gujrat">Gujarat</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6 form-group{{ $errors->has('city') ? ' has-error' : '' }}">
-                                    <select class="selectpicker" name="city" data-style="btn-white">
-                                        <option>Mumbai</option>
-                                        <option>Delhi</option>
-                                    </select>
-                                </div>
                             </div>
 
                             <div class="col-md-12">
@@ -189,12 +195,18 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
-                                    <select multiple name="subject[]" data-role="tagsinput">
-                                        <option value="Physics">Physics</option>
-                                        <option value="Chemistry">Chemistry</option>
-                                        <option value="Biology">Biology</option>
-                                        <option value="Mathematics">Mathematics</option>
-                                        <option value="History">History</option>
+                                    <select multiple name="subject[]" data-role="tagsinput" id="subject">
+                                        {{--<option value="Physics">Physics</option>--}}
+                                        {{--<option value="Chemistry">Chemistry</option>--}}
+                                        {{--<option value="Biology">Biology</option>--}}
+                                        {{--<option value="Mathematics">Mathematics</option>--}}
+                                        {{--<option value="History">History</option>--}}
+                                        {{--<option value="">Select Country</option>--}}
+                                        @if($subject)
+                                            @foreach ($subject as $key => $sub)
+                                                <option value="{{$sub->id}}">{{$sub->name}}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
 
@@ -211,12 +223,14 @@
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('work') ? ' has-error' : '' }}">
                                     <select class="selectpicker" name="work" data-style="btn-white">
+                                        <option value="">Select working hours</option>
                                         <option value="5">5</option>
                                         <option value="6">6</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group{{ $errors->has('language') ? ' has-error' : '' }}">
                                     <select class="selectpicker" name="language" data-style="btn-white">
+                                        <option value="">Select language</option>
                                         <option value="hindi">Hindi</option>
                                         <option value="english">English</option>
                                     </select>
@@ -307,7 +321,34 @@
 <script src="{{asset('js/jquery.core.js')}}"></script>
 <script src="{{asset('js/jquery.app.js')}}"></script>
 <script src="{{asset('pages/jquery.form-pickers.init.js') }}"></script>
+<script type="text/javascript">
+    $('#country').on('change',function(e){
+        var countryID = $(this).val();
+        $.get('api/get-state-list?country_id=' + countryID, function(res){
+            $('#state').empty();
+            $.each(res,function(index,subcatObj){
+                $('#state').append('<option value="'+subcatObj.id+'">'+subcatObj.name+'</option>');
+            });//
 
+            $('#state').selectpicker('refresh');
+        });
+
+    });
+
+    $(document).ready(function(){
+        $('#state').on('change',function(e){
+            var stateID = $(this).val();
+            $.get('api/get-city-list?state_id=' + stateID, function(res){
+                $('#city').empty();
+                $.each(res,function(index,subcatObj){
+                    $('#city').append('<option value="'+subcatObj.name+'">'+subcatObj.name+'</option>');
+                });//
+
+                $('#city').selectpicker('refresh');
+            });
+        });
+    });
+</script>
 </body>
 
 <!-- Mirrored from coderthemes.com/ubold/light/form-pickers.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Nov 2017 15:23:27 GMT -->

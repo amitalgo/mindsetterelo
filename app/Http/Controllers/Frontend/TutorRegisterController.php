@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Country;
+use App\State;
+use App\subDetails;
 use App\User;
 use App\userRoles;
 use Carbon\Carbon;
@@ -16,12 +19,19 @@ class TutorRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public  function __construct(User $user){
+    public  function __construct(User $user,subDetails $subDetails,State $state,Country $country){
         $this->user=$user;
+        $this->sub=$subDetails;
+        $this->country=$country;
+        $this->state=$state;
     }
     public function index()
     {
-        return view('frontend.tutorRegister');
+        $subject=$this->sub::all();
+        $countries=$this->country::all();
+        $state=$this->state::all();
+
+        return view('frontend.tutorRegister',compact('subject','countries'));
     }
 
     /**
