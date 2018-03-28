@@ -195,19 +195,20 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
-                                    <select multiple name="subject[]" data-role="tagsinput" id="subject">
+                                    <input type="text" id="sub" data-role="tagsinput" />
+                                    {{--<select multiple name="subject[]" data-role="tagsinput" id="subject">--}}
                                         {{--<option value="Physics">Physics</option>--}}
                                         {{--<option value="Chemistry">Chemistry</option>--}}
                                         {{--<option value="Biology">Biology</option>--}}
                                         {{--<option value="Mathematics">Mathematics</option>--}}
                                         {{--<option value="History">History</option>--}}
                                         {{--<option value="">Select Country</option>--}}
-                                        @if($subject)
-                                            @foreach ($subject as $key => $sub)
-                                                <option value="{{$sub->id}}">{{$sub->name}}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+                                        {{--@if($subject)--}}
+                                            {{--@foreach ($subject as $key => $sub)--}}
+                                                {{--<option value="{{$sub->id}}">{{$sub->name}}</option>--}}
+                                            {{--@endforeach--}}
+                                        {{--@endif--}}
+                                    {{--</select>--}}
                                 </div>
 
                                 <div class="col-md-6 form-group{{ $errors->has('fee') ? ' has-error' : '' }}">
@@ -317,7 +318,7 @@
 <script src="{{ asset('plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('plugins/clockpicker/js/bootstrap-clockpicker.min.js') }}"></script>
 <script src="{{ asset('plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-
+<script src="{{ asset('js/frontend/js/typeahead.js') }}"></script>
 <script src="{{asset('js/jquery.core.js')}}"></script>
 <script src="{{asset('js/jquery.app.js')}}"></script>
 <script src="{{asset('pages/jquery.form-pickers.init.js') }}"></script>
@@ -336,6 +337,11 @@
     });
 
     $(document).ready(function(){
+        $.get('api/get-sub-list', function(res){
+            //console.log(res);
+        });
+
+
         $('#state').on('change',function(e){
             var stateID = $(this).val();
             $.get('api/get-city-list?state_id=' + stateID, function(res){
@@ -349,6 +355,32 @@
         });
     });
 </script>
+<script>
+    var citynames = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: 'api/get-sub-list',
+            filter: function(list) {
+                return $.map(list, function(cityname) {
+                    return { name: cityname }; });
+            }
+        }
+    });
+
+    console.log(citynames);
+
+    citynames.initialize();
+
+    $('#sub').tagsinput({
+        typeaheadjs: {
+            name: 'citynames',
+            displayKey: 'name',
+            valueKey: 'name',
+            source: citynames.ttAdapter()
+        }
+    });
+    </script>
 </body>
 
 <!-- Mirrored from coderthemes.com/ubold/light/form-pickers.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Nov 2017 15:23:27 GMT -->
