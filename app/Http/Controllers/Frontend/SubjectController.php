@@ -21,7 +21,7 @@ class SubjectController extends Controller
 
     public function getSubList(subDetails $sub)
     {
-        $subject=DB::table('sub_details')->pluck('subject_id');
+        $subject=DB::table('sub_details')->pluck('subject');
         return response()->json($subject);
     }
 

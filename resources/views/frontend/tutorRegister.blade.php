@@ -46,11 +46,15 @@
                     <div class="panel-heading">Tutors Registration</div>
 
                     <div class="panel-body">
+                        @if (Session::has('message'))
+                            <li>{!! session('message') !!}</li>
+                        @endif
                         <form class="form-horizontal" method="POST" action="{{ route('tutor.submit') }}">
                             {{ csrf_field() }}
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('fname') ? ' has-error' : '' }}">
+                                    <label for="">First Name</label>
                                     <input id="fname" type="text" class="form-control" placeholder="First Name" name="fname" value="{{ old('fname') }}" required autofocus>
                                     @if ($errors->has('fname'))
                                         <span class="help-block">
@@ -61,6 +65,7 @@
 
 
                                 <div class="col-md-6 form-group{{ $errors->has('lname') ? ' has-error' : '' }}">
+                                    <label for="">Last Name</label>
                                     <input id="lname" type="text" class="form-control" placeholder="Last Name" name="lname" value="{{ old('lname') }}" required autofocus>
                                     @if ($errors->has('lname'))
                                         <span class="help-block">
@@ -72,54 +77,76 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
+                                    <label for="">Gender</label>
                                     <select class="selectpicker" name="gender" data-style="btn-white">
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
+                                    @if ($errors->has('gender'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('gender') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
 
 
-                                <div class="col-md-6 form-group{{ $errors->has('dob') ? ' has-error' : '' }}">
-                                    <input type="text" class="form-control" placeholder="DOB" id="datepicker-autoclose" name="dob" value="{{old('dob')}}" >
+                                <div class="col-md-6 form-group{{ $errors->has('db') ? ' has-error' : '' }}">
+                                    <label for="">Date of birth</label>
+                                    <input type="text" class="form-control" placeholder="DOB" id="datepicker-autoclose" name="db" value="{{old('db')}}" >
+                                    @if ($errors->has('db'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('db') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                {{--<div class="col-md-6 form-group{{ $errors->has('location') ? ' has-error' : '' }}">--}}
-                                {{--<input id="location" type="text" class="form-control" placeholder="Location" name="location" value="{{ old('location') }}" required autofocus>--}}
-                                {{--@if ($errors->has('location'))--}}
-                                {{--<span class="help-block">--}}
-                                {{--<strong>{{ $errors->first('location') }}</strong>--}}
-                                {{--</span>--}}
-                                {{--@endif--}}
-                                {{--</div>--}}
+
                                 <div class="col-md-6 form-group{{ $errors->has('country') ? ' has-error' : '' }}">
+                                    <label for="">Country</label>
                                     <select class="selectpicker" name="country" data-style="btn-white" id="country">
                                         <option value="">Select Country</option>
                                         @foreach ($countries as $key => $country)
+                                            {{--@if(old('country')==$country->id){{'selected'}} @endif--}}
                                             <option value="{{ $country->id }}">{{ $country->name }}</option>
                                         @endforeach
                                     </select>
-
+                                    @if ($errors->has('country'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('country') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <div class="col-md-6 form-group{{ $errors->has('state') ? ' has-error' : '' }}">
+                                    <label for="">State</label>
                                     <select class="selectpicker" name="state" data-style="btn-white" id="state">
-
+                                        <option value="">Select  State</option>
                                     </select>
+                                    @if ($errors->has('state'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('state') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="col-md-12">
 
                                 <div class="col-md-6 form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+                                    <label for="">City</label>
                                     <select class="selectpicker" name="city" data-style="btn-white" id="city">
-                                        {{--<option value="">Select City</option>--}}
-                                        {{--<option>Mumbai</option>--}}
-                                        {{--<option>Delhi</option>--}}
+                                        <option value=""> Select City</option>
                                     </select>
+                                    @if ($errors->has('city'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('city') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+                                    <label for="">Address</label>
                                     <input id="address" type="text" class="form-control" placeholder="Address" name="address"  value="{{ old('address') }}" required autofocus>
                                     @if ($errors->has('address'))
                                         <span class="help-block">
@@ -132,6 +159,7 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('pincode') ? ' has-error' : '' }}">
+                                    <label for="">Pincode</label>
                                     <input id="pincode" type="number" class="form-control" placeholder="Pin Code" name="pincode" value="{{ old('pincode') }}" required autofocus>
                                     @if ($errors->has('pincode'))
                                         <span class="help-block">
@@ -142,6 +170,7 @@
 
 
                                 <div class="col-md-6 form-group{{ $errors->has('age') ? ' has-error' : '' }}">
+                                    <label for="">Age</label>
                                     <input id="age" type="number" class="form-control" placeholder="Age" name="age" value="{{ old('age') }}" required autofocus>
                                     @if ($errors->has('age'))
                                         <span class="help-block">
@@ -153,6 +182,7 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                    <label for="">Email Id</label>
                                     <input id="email" type="text" class="form-control" placeholder="Email Id" name="email" value="{{ old('email') }}" required autofocus>
                                     @if ($errors->has('email'))
                                         <span class="help-block">
@@ -163,6 +193,7 @@
 
 
                                 <div class="col-md-6 form-group{{ $errors->has('mobile') ? ' has-error' : '' }}">
+                                    <label for="">Mobile No.</label>
                                     <input id="mobile" type="number" class="form-control" placeholder="Mobile No" name="mobile" value="{{ old('mobile') }}" required autofocus>
                                     @if ($errors->has('mobile'))
                                         <span class="help-block">
@@ -174,6 +205,7 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('qualification') ? ' has-error' : '' }}">
+                                    <label for="">Qualification</label>
                                     <input id="qualification" type="text" class="form-control" placeholder="Qualification" name="qualification" value="{{ old('qualification') }}" required autofocus>
                                     @if ($errors->has('qualification'))
                                         <span class="help-block">
@@ -184,6 +216,7 @@
 
 
                                 <div class="col-md-6 form-group{{ $errors->has('experience') ? ' has-error' : '' }}">
+                                    <label for="">Experience</label>
                                     <input id="experience" type="number" class="form-control" placeholder="Experience" name="experience" value="{{ old('experience') }}" required autofocus>
                                     @if ($errors->has('experience'))
                                         <span class="help-block">
@@ -195,23 +228,12 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
-                                    <input type="text" id="sub" data-role="tagsinput" />
-                                    {{--<select multiple name="subject[]" data-role="tagsinput" id="subject">--}}
-                                        {{--<option value="Physics">Physics</option>--}}
-                                        {{--<option value="Chemistry">Chemistry</option>--}}
-                                        {{--<option value="Biology">Biology</option>--}}
-                                        {{--<option value="Mathematics">Mathematics</option>--}}
-                                        {{--<option value="History">History</option>--}}
-                                        {{--<option value="">Select Country</option>--}}
-                                        {{--@if($subject)--}}
-                                            {{--@foreach ($subject as $key => $sub)--}}
-                                                {{--<option value="{{$sub->id}}">{{$sub->name}}</option>--}}
-                                            {{--@endforeach--}}
-                                        {{--@endif--}}
-                                    {{--</select>--}}
+                                    <label for="">Subject</label>
+                                    <input type="text" class="form-control" value="{{old('subject')}}" name="subject" placeholder="Please Enter Subject Name" id="sub" data-role="tagsinput" />
                                 </div>
 
                                 <div class="col-md-6 form-group{{ $errors->has('fee') ? ' has-error' : '' }}">
+                                    <label for="">Fees</label>
                                     <input id="fee" type="number" class="form-control" placeholder="Fee in  Rs." name="fee" value="{{ old('fee') }}" required autofocus>
                                     @if ($errors->has('fee'))
                                         <span class="help-block">
@@ -223,23 +245,57 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('work') ? ' has-error' : '' }}">
+                                    <label for="">Working Hours</label>
                                     <select class="selectpicker" name="work" data-style="btn-white">
                                         <option value="">Select working hours</option>
                                         <option value="5">5</option>
                                         <option value="6">6</option>
                                     </select>
+                                    @if ($errors->has('work'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('work') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 form-group{{ $errors->has('language') ? ' has-error' : '' }}">
+                                    <label for="">Language</label>
                                     <select class="selectpicker" name="language" data-style="btn-white">
                                         <option value="">Select language</option>
                                         <option value="hindi">Hindi</option>
                                         <option value="english">English</option>
                                     </select>
+                                    @if ($errors->has('language'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('language') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6 form-group{{ $errors->has('skill') ? ' has-error' : '' }}">
+                                    <label for="">Skills</label>
+                                    <input type="text" class="form-control" name="skill" value="{{old('skill')}}" placeholder="Please Enter skill" id="skill" data-role="tagsinput" />
+                                    @if ($errors->has('skill'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('skill') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="col-md-6 form-group{{ $errors->has('honour') ? ' has-error' : '' }}">
+                                    <label for="">Honour</label>
+                                    <input type="text" class="form-control" name="honour" value="{{old('honour')}}" placeholder="Please Enter honour" id="honour" data-role="tagsinput" />
+                                    @if ($errors->has('honour'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('honour') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
 
                             </div>
                             <div class="col-md-12">
                                 <div class="col-md-12 form-group{{ $errors->has('about') ? ' has-error' : '' }}">
+                                    <label for="">About</label>
                                     <textarea class="form-control" rows="5" placeholder="About Me" name="about" value="{{old('about')}}"></textarea>
                                     @if ($errors->has('about'))
                                         <span class="help-block">
@@ -250,6 +306,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="col-md-6 form-group{{ $errors->has('pass') ? ' has-error' : '' }}">
+                                    <label for="">Password</label>
                                     <input type="password" name="pass" class="form-control" placeholder="Enter password">
                                     @if ($errors->has('pass'))
                                         <span class="help-block">
@@ -258,6 +315,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6 form-group{{ $errors->has('cpass') ? ' has-error' : '' }}">
+                                    <label for="">Confirm Password</label>
                                     <input type="password" name="cpass" class="form-control" placeholder="Confirm password">
                                     @if ($errors->has('cpass'))
                                         <span class="help-block">
@@ -327,6 +385,7 @@
         var countryID = $(this).val();
         $.get('api/get-state-list?country_id=' + countryID, function(res){
             $('#state').empty();
+            $('#state').append('<option>Select State</option>');
             $.each(res,function(index,subcatObj){
                 $('#state').append('<option value="'+subcatObj.id+'">'+subcatObj.name+'</option>');
             });//
@@ -347,7 +406,7 @@
             $.get('api/get-city-list?state_id=' + stateID, function(res){
                 $('#city').empty();
                 $.each(res,function(index,subcatObj){
-                    $('#city').append('<option value="'+subcatObj.name+'">'+subcatObj.name+'</option>');
+                    $('#city').append('<option value="'+subcatObj.id+'">'+subcatObj.name+'</option>');
                 });//
 
                 $('#city').selectpicker('refresh');

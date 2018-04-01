@@ -10,7 +10,7 @@ class userRoles extends Model
         'roles_id', 'user_id', 'is_Active',
     ];
 
-    public function user_id()
+    public function User()
     {
         return $this->belongsTo(User::class);
     }

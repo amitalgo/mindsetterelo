@@ -15,8 +15,8 @@ class CreateSubDetailsTable extends Migration
     {
         Schema::create('sub_details', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('subject_id');
-            $table->integer('tutors_id');
+            $table->string('subject');
+            $table->integer('user_id');
             $table->integer('is_Active');
             $table->timestamps();
         });

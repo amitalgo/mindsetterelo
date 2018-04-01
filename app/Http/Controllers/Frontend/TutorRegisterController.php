@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Country;
+use App\Language;
 use App\State;
 use App\subDetails;
+use App\Timeslot;
 use App\User;
+use App\user_x;
 use App\userRoles;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Validation\Rules\In;
 
 class TutorRegisterController extends Controller
 {
@@ -39,10 +46,49 @@ class TutorRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function tutorsView(Request $request)
     {
-        //
+        $tutors = User::where('is_Admin', '!=', '1')->where('is_Active', '=' , '1')->with('user_x')->with('subDetails');
+
+        //Condition for Gender
+        if ($request->has('gender') && !empty(Input::get('gender')) && Input::get('gender')!='both' )
+        {
+                $tutors=$tutors->whereHas('user_x',function($q){
+                    $q->where('gender',Input::get('gender'));
+                });
+        }
+        // Condition for language
+        if ($request->has('language') && !empty(Input::get('language')) && Input::get('language') !='all')
+        {
+            $tutors=$tutors->whereHas('user_x', function ($q){
+               $q->where('language', Input::get('language'));
+            });
+        }
+        /// Condition for subject
+        if ($request->has('subject') && !empty(Input::get('subject')))
+        {
+            $tutors=$tutors->whereHas('subDetails', function ($q){
+                $q->where('subject', Input::get('subject'));
+            });
+        }
+        /// Condition for age filter
+        if($request->has('endagePos') && !empty(Input::get('endagePos')))
+        {
+            $tutors=$tutors->whereHas('user_x', function ($q){
+                $q->whereBetween('age', array(Input::get('staragetPos'), Input::get('endagePos')));
+            });
+        }
+
+        $users = $tutors->get();
+
+//        print_r($users);exit;
+//        $users =User::where('is_Admin', '!=', '1')->where('is_Active', '=' , '1')->with('user_x')->with('subDetails')->get();
+        $subjects=subDetails::select('subject')->groupBy('subject')->get();
+        $languages=Language::where('is_Active','1')->get();
+        $timeslots = Timeslot::where('is_Active','1')->get();
+        return view('frontend.tutors', compact('users', 'subjects','languages','timeslots'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -55,15 +101,15 @@ class TutorRegisterController extends Controller
         $request->validate([
             'fname'=>'required',
             'lname'=>'required',
-            'dob'=>'required',
+            'db'=>'required',
             'address'=>'required',
-            'location'=>'required',
+            'country'=>'required',
             'state'=>'required',
             'city'=>'required',
-            'pincode'=>'required',
+            'pincode'=>'required|max:6',
             'age'=>'required',
-            'email'=>'required',
-            'mobile'=>'required',
+            'email'=>'required|unique:users|email'.$this->user->id,
+            'mobile'=>'required|max:10',
             'qualification'=>'required',
             'experience'=>'required',
             'subject'=>'required',
@@ -74,41 +120,71 @@ class TutorRegisterController extends Controller
             'pass'=>'required',
             'cpass'=>'same:pass',
         ]);
+        $success=false;
+        DB::beginTransaction();
+        try{
+                $user = User::create([
+                   'name' => $request['fname'],
+                    'mobile'=>$request['mobile'],
+                    'is_Admin' => '0',
+                    'is_Active' => '0',
+                    'created_at'=>Carbon::now()->toDateTimeString(),
+                    'updated_at'=>Carbon::now()->toDateTimeString(),
+                    'email' => $request['email'],
+                    'password' => Hash::make($request['pass']),
+                ]);
 
-//        $this->user->name=$request['fname'];
-//        $this->user->email=$request['email'];
-//        $this->user->mobile=$request['mobile'];
-//        $this->user->password=Hash::make($request['pass']);
-//        $this->user->is_Admin=0;
-//        $this->user->is_Active=0;
-//        $this->user->created_at=Carbon::now()->toDateTimeString();
-//        $this->user->updated_at=Carbon::now()->toDateTimeString();
-//        $result=$this->user->save();
-
-        $user = User::create([
-           'name' => $request['fname'],
-            'mobile'=>$request['mobile'],
-            'is_Admin' => '0',
-            'is_Active' => '0',
-            'created_at'=>Carbon::now()->toDateTimeString(),
-            'updated_at'=>Carbon::now()->toDateTimeString(),
-            'email' => $request['email'],
-            'password' => Hash::make($request['pass']),
-        ]);
-
-        $user_roles = userRoles::create([
-            'roles_id' => '2',
-           'user_id' => $user->id,
-            'is_Active' =>'0',
-        ]);
-
-        if ($user_roles)
-        {
-            redirect('/');
+                userRoles::create([
+                    'roles_id' => '2',
+                   'user_id' => $user->id,
+                    'is_Active' =>'0',
+                ]);
+                user_x::create([
+                        'user_id'=> $user->id,
+                        'gender'=> $request['gender'],
+                        'age' => $request['age'],
+                        'dob' => $request['db'],
+                        'address'=> $request['address'],
+                        'location'=> $request['country'],
+                        'state' => $request['state'],
+                        'city' => $request['city'],
+                        'pincode' => $request['pincode'],
+                        'qualification'=> $request['qualification'],
+                        'about' => $request['about'],
+                        'exp' => $request['experience'],
+                        'fees' => $request['fee'],
+                        'time_slot' => $request['work'],
+                        'is_Active' =>'1',
+                        'language' => $request['language'],
+                        'skills'    => $request['skill'],
+                        'honour'    => $request['honour'],
+                ]);
+                $sub=explode(',',$request['subject']);
+                foreach ($sub as $key=>$subject){
+                        subDetails::create([
+                        'subject' => $subject,
+                        'user_id'=> $user->id,
+                        'is_Active' =>'1',
+                        'created_at'=>Carbon::now()->toDateTimeString(),
+                        'updated_at'=>Carbon::now()->toDateTimeString(),
+                    ]);
+                }
+            DB::commit();
+            $success= true;
         }
-        else{
-            echo "some thing going wrong";
+        catch(\Exception $e){
+            $success = false;
+            DB::rollback();
         }
+
+        if($success){
+            \Session::flash('message', 'Tutors Created Successfully!');
+            return $this->index();
+        }else{
+            \Session::flash('message', 'Something Went Wrong!');
+            return view('frontend/tutorRegister');
+        }
+
     }
 
     /**

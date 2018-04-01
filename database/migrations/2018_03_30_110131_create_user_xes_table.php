@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDetailsXSTable extends Migration
+class CreateUserXesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,22 @@ class CreateUserDetailsXSTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_details_xs', function (Blueprint $table) {
+        Schema::create('user_xes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('gender');
             $table->integer('age');
+            $table->string('dob');
             $table->text('address');
             $table->string('location');
             $table->string('city');
             $table->string('state');
             $table->integer('pincode');
             $table->text('qualification');
-            $table->text('subject');
             $table->text('about');
-            $table->text('skills');
+            $table->text('skills')->nullable();
             $table->integer('exp');
-            $table->text('honour');
+            $table->text('honour')->nullable();
             $table->text('fees');
             $table->string('language');
             $table->string('time_slot');
@@ -44,6 +44,6 @@ class CreateUserDetailsXSTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_details_xs');
+        Schema::dropIfExists('user_xes');
     }
 }

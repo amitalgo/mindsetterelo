@@ -11,9 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'Frontend\HomeController@index');
+
+Route::get('/tutors', 'Frontend\TutorRegisterController@tutorsView')->name('tutor.view');
+
+Route::get('/newsgrid', function(){
+    return view('frontend.newsgrid');
 });
+
+Route::get('/contactus',function(){
+   return view('frontend.contactus');
+});
+
 Route::get('/tutor_register','Frontend\TutorRegisterController@index')->name('frontend.tutorRegister');
 Route::post('/tutor_register','Frontend\TutorRegisterController@store')->name('tutor.submit');
 
